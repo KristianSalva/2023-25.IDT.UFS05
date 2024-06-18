@@ -1,5 +1,7 @@
 import os
 from flask import Flask, render_template, request
+import json
+import requests 
 
 class User:
     username = None
@@ -107,6 +109,18 @@ def saveuser():
     passwordStr = request.form.get("password")
     emailStr = request.form.get("email")
     listaUser.append(User(usernameStr, passwordStr, emailStr))
+
+
+    url ="https://nodered-65642.azurewebsites.net/ciaone?usernameStr={}&emailStr={}".format(usernameStr, emailStr)
+
+
+# data = {'nome': 'anna', 'cognome': 'chiodo'}
+# headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    r = requests.get(url)
+
+#2) aggiungere il body alla req
+
+#html = response.read()
 
     return render_template("listaUtenti.html", paramList = listaUser)
 

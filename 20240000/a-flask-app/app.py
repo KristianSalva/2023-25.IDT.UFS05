@@ -1,76 +1,75 @@
-from flask import Flask, redirect, render_template, request
 import os
+from flask import Flask, render_template, request
+
+class User:
+    username = None
+    password = None
+    email = None
+
+    def __init__(self, u, p, e):
+        self.username = u
+        self.password = p
+        self.email = e
+    
+    def getUsername(self):
+        return self.username
+    
+    def getPassword(self):
+        return self.password
+    
+    '''def __str__(self):
+        return f"User: {self.username}, {self.password}, {self.email}"
+    '''
+    def __repr__(self):
+        return f"Lista utenti: username {self.username}, password {self.password}, e-mail {self.email}"
+    
+
+
+antonio = User("antonio", "123456", "antonio@itsrizzoli.it")
+davide = User("davide", "ciao", "d.longo@itsrizzoli.it")
+aimane = User('aimane', 'yolo', 'a.jrada@itsrizzoli.it')
+kristian = User('kristian', 'ciaone', 'k.salva@itsrizzoli.it')
+listaUser = [antonio, davide, aimane, kristian]
+
 
 appWeb = Flask(__name__)
 
-#http://www.miosito.it/prova
-#http://www.miosito.it/saluto
+@appWeb.route("/listaUtenti")
+def listaUtenti():
+    '''print("<ul>")
+    for obj in listaUser:
+        print(f" <li>{repr(obj)}</li>")
+    print("</ul>")'''
+    return render_template("listaUtenti.html", paramList = listaUser)
 
-#http://www.miosito.it/
-
-class Utente:
-    def __init__(self, nome, cognome, username, password, email, data_di_nascita, genere):
-        self.nome = nome
-        self.cognome = cognome
-        self.username = username
-        self.password = password
-        self.email = email
-        self.data_di_nascita = data_di_nascita
-        self.genere = genere
-
-    def ottieni_nome(self):
-        return self.nome
-    
-    def ottieni_cognome(self):
-        return self.cognome
-
-    def ottieni_username(self):
-        return self.username
-    
-    def ottieni_password(self):
-        return self.password
-
-    def ottieni_email(self):
-        return self.email
-
-    def ottieni_data_di_nascita(self):
-        return self.data_di_nascita
-
-    def ottieni_genere(self):
-        return self.genere
-    
-
-
-Utente1 = Utente("Mario", "Rossi", "mrossi", "1234567", "mario.rossi@gmail.com", "01/01/1980", "Maschio")
-Utente2 = Utente("Giovanni", "Bianchi", "gbianchi", "qwerty", "giovanni.bianchi@gmail.com", "15/05/1990", "Maschio")
-Utente3 = Utente("Roberta", "Verdi", "rverdi", "ciao1", "roberta.verdi@gmail.com", "10/10/1985", "Femmina")
-lista_utenti = [
-    Utente1, Utente2, Utente3
-]
-
-global loggedUser
-loggedUser = None
-
-
+#http://www.miosito.it
+#definisco un endpoint / che risponde all'indirizzo http://127.0.0.1:5000/
 
 @appWeb.route("/")
-def main():
-    return "pagina iniziale da visualizzare"
+def home():
+    #return "pagina iniziale da visualizzare"
+    return render_template("home.html")
 
+
+#http://www.miosito.it/prova
 @appWeb.route("/prova")
 def prova():
     return "stringa da visualizzare come prova"
+
+#http://www.miosito.it/presentazione
 @appWeb.route("/presentazione")
 def saluto():
     return "Buongiorno"
 
-@appWeb.route("/index")
-def index():
-    return render_template("index.html")
-
 @appWeb.route("/htmlsample")
 def html():
-    return "<html><body><h1>Titolo</h1><p>paragrafo da visualizzare</p></body></html>"
+    return "<html><body><h1>Titolo</h1><p>paragrafo da visualizzare</p><body></html>"
+
+
+@appWeb.route("/indexhtml")
+def funzionehtml():
+    return render_template("index.html")
+
 
 @appWeb.route("/login")
 def login():
@@ -80,36 +79,36 @@ def login():
 def registrazione():
     return render_template("registrazione.html")
 
-@appWeb.route("/home")
-def home():
-    return render_template("home.html", paramUser = loggedUser)
-
 
 @appWeb.route("/autenticazione", methods = ["POST"])
 def autenticazione():
     usernameStr = request.form.get("username")
     passwordStr = request.form.get("password")
-    for utente in lista_utenti:
-        if usernameStr == utente.ottieni_username() and passwordStr == utente.ottieni_password():
-            loggedUser = utente
-            return render_template("home.html", paramUser=loggedUser)
-    return render_template("fail.html")
+    for i in listaUser:
+        u = i.getUsername()
+        p = i.getPassword()
+        if u == usernameStr and p == passwordStr:
+            return render_template("home.html", paramUser = usernameStr)
+                
+    return render_template("fail.html") # messo fuori perché altrimenti non finisce il ciclo for, e si ferma alla prima iterazione
+            
+    '''if passwordStr == "123456":
+        return render_template("home.html", paramUser = usernameStr)
+    else:
+        return render_template("fail.html")'''
 
-@appWeb.route("/registrazione_post", methods = ["POST"])
-def registrazione_post():
-    nameStr = request.form.get("name")
-    cognomeStr = request.form.get("cognome")
+    '''for i in listaUser:
+        listaUser.append(usernameStr)
+        return render_template("listaUser.html", paramUser = listaUser)'''
+
+@appWeb.route("/saveuser", methods =["POST"])
+def saveuser():
     usernameStr = request.form.get("username")
     passwordStr = request.form.get("password")
     emailStr = request.form.get("email")
-    datadinascitaStr = request.form.get("data di nascita")
-    genereStr = request.form.get("genere")
-    utente = Utente(nameStr,cognomeStr,usernameStr,passwordStr,emailStr,datadinascitaStr,genereStr)
-    global loggedUser
-    loggedUser = utente
-    lista_utenti.append(utente)
+    listaUser.append(User(usernameStr, passwordStr, emailStr))
 
-    return redirect("/home")
+    return render_template("listaUtenti.html", paramList = listaUser)
 
 if __name__ == "__main__":
     # https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings

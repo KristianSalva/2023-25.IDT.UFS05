@@ -2,6 +2,9 @@ import os
 from flask import Flask, render_template, request
 import json
 import requests 
+import mysql.connector
+from mysql.connector import Error
+
 
 class User:
     username = None
@@ -53,6 +56,32 @@ def home():
     return render_template("home.html")
 
 
+connection = None
+try:
+    connection = mysql.connector.connect(
+        host="its-rizzoli-idt-mysql-kristian.mysql.database.azure.com",
+        user="psqladmin",
+        passwd="H@Sh1CoR3!",
+        database="...."
+    )
+    print("Connection to MySQL DB successful")
+except Error as e:
+    print(f"The error '{e}' occurred")
+    cursor = connection.cursor()
+    create_table_query = """
+    CREATE TABLE IF NOT EXISTS sample_table (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL
+    );
+    """
+    try:
+        cursor.execute(create_table_query)
+        connection.commit()
+        print("Table created successfully")
+    except Error as e:
+        print(f"The error '{e}' occurred")
+
+
 #http://www.miosito.it/prova
 @appWeb.route("/prova")
 def prova():
@@ -61,7 +90,7 @@ def prova():
 #http://www.miosito.it/presentazione
 @appWeb.route("/presentazione")
 def saluto():
-    return "Buongiorno"
+    return "Buongiornoooooo"
 
 @appWeb.route("/htmlsample")
 def html():

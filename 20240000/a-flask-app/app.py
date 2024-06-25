@@ -51,41 +51,37 @@ def listaUtenti():
 #definisco un endpoint / che risponde all'indirizzo http://127.0.0.1:5000/
 
 @appWeb.route("/")
-def home():
-    #return "pagina iniziale da visualizzare"
-    return render_template("home.html")
-
-
-connection = None
-try:
-    connection = mysql.connector.connect(
-        host="its-rizzoli-idt-mysql-kristian.mysql.database.azure.com",
-        user="psqladmin",
-        passwd="H@Sh1CoR3!",
-        database="...."
-    )
-    print("Connection to MySQL DB successful")
-except Error as e:
-    print(f"The error '{e}' occurred")
-    cursor = connection.cursor()
-    create_table_query = """
-    CREATE TABLE IF NOT EXISTS sample_table (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL
-    );
-    """
+def main():
+    connection = None
+    risposta="nessuna risposta"
     try:
-        cursor.execute(create_table_query)
-        connection.commit()
-        print("Table created successfully")
+        connection = mysql.connector.connect(
+            host="its-rizzoli-idt-mysql-kristian.mysql.database.azure.com",
+            user="psqladmin",
+            passwd="H@Sh1CoR3!",
+            database="egzondb"
+        )
+        risposta="Connection to MySQL DB successful"
+        cursor = connection.cursor()
+
+        query = ("SELECT first_name, last_name FROM employees")
+
+        
+        cursor.execute(query)
+
+        for (first_name, last_name, ) in cursor:
+            risposta = first_name
+        cursor.close()
+        connection.close()
     except Error as e:
-        print(f"The error '{e}' occurred")
+        risposta=f"The error '{e}' occurred"
+    return risposta
 
 
 #http://www.miosito.it/prova
 @appWeb.route("/prova")
 def prova():
-    return "stringa da visualizzare come prova"
+    return "stringa da visualizzare come prova su azure"
 
 #http://www.miosito.it/presentazione
 @appWeb.route("/presentazione")

@@ -136,7 +136,7 @@ def saveuser():
     listaUser.append(User(usernameStr, passwordStr, emailStr))
 
 
-    url ="https://nodered-65642.azurewebsites.net/ciaone?usernameStr={}&emailStr={}".format(usernameStr, emailStr)
+    url ="https://nodered-89794.azurewebsites.net/ciaone?usernameStr={}&emailStr={}".format(usernameStr, emailStr)
 
 
 # data = {'nome': 'anna', 'cognome': 'chiodo'}

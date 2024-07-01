@@ -79,7 +79,7 @@ resource "azurerm_linux_web_app" "python" {
   }
   site_config {
     minimum_tls_version = "1.2"
-    app_command_line = ". 20240000/a-flask-app/entrypoint.sh"
+    app_command_line = ".20240000/a-flask-app/entrypoint.sh"
     application_stack {
       python_version = "3.10"
     }

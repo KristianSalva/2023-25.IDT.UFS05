@@ -59,23 +59,26 @@ def database():
             host="its-rizzoli-idt-mysql-kristian.mysql.database.azure.com",
             user="psqladmin",
             passwd="H@Sh1CoR3!",
-            database="egzondb";
+            database="egzondb"
 
-            # Nome del file SQL
-            sql_file_name = "script.sql"
-
-            # Apertura e lettura del file SQL
-            with open(sql_file_name, 'r') as sql_file:
-                sql_statements = sql_file.read()
-
-            # Esecuzione di ogni istruzione SQL nel file
-            for sql_statement in sql_statements.split(';'):
-                if sql_statement:
-                    cursor.execute(sql_statement)
-
-            # Commit delle modifiche
-            db.commit()
+            
         )
+        
+    # Nome del file SQL
+        sql_file_name = "script.sql"
+
+        # Apertura e lettura del file SQL
+        with open(sql_file_name, 'r') as sql_file:
+            sql_statements = sql_file.read()
+
+        # Esecuzione di ogni istruzione SQL nel file
+        for sql_statement in sql_statements.split(';'):
+            if sql_statement:
+                cursor.execute(sql_statement)
+
+        # Commit delle modifiche
+        connection.commit()
+        
         risposta="Connection to MySQL DB successful"
         cursor = connection.cursor()
 

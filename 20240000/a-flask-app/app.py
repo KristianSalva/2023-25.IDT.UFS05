@@ -59,7 +59,7 @@ def database():
             host="its-rizzoli-idt-mysql-kristian.mysql.database.azure.com",
             user="psqladmin",
             passwd="H@Sh1CoR3!",
-            database="egzondb"
+            database="egzondb";
 
             # Nome del file SQL
             sql_file_name = "script.sql"

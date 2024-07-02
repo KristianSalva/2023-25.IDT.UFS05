@@ -50,8 +50,8 @@ def listaUtenti():
 #http://www.miosito.it
 #definisco un endpoint / che risponde all'indirizzo http://127.0.0.1:5000/
 
-@appWeb.route("/")
-def main():
+@appWeb.route("/database")
+def database():
     connection = None
     risposta="nessuna risposta"
     try:
@@ -76,6 +76,10 @@ def main():
     except Error as e:
         risposta=f"The error '{e}' occurred"
     return risposta
+
+@appWeb.route("/")
+def main():
+    return render_template('home.html')
 
 
 #http://www.miosito.it/prova
